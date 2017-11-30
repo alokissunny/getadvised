@@ -10,12 +10,22 @@ router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/:_id', update);
 router.delete('/:_id', _delete);
+router.get('/', allCategories);
 
 module.exports = router;
 
 
 
 //functions
+function allCategories(req,res) {
+    advisorService.allCategories()
+    .then(function(cats){
+        res.send(cats);
+    })
+    .catch(function(err) {
+         res.status(400).send(err);
+    })
+}
 function register(req, res) {
     advisorService.create(req.body)
         .then(function () {

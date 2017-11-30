@@ -26,6 +26,6 @@ var service = {};
      return deffered;
 
  }
- function cancelAppointment(cancelParam) {
+ function cancelAppointment(appointmentid) {
 
  }

@@ -1,4 +1,5 @@
 var config = require('config.json');
+var constants = require('constants/category.constant')
 var _ = require('lodash');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
@@ -18,6 +19,13 @@ service.delete = _delete;
 
 module.exports = service;
 
+
+function allCategories() {
+    var deffered = Q.defer();
+    deferred.resolve(constants.CATEGORIES);
+    return deffered;
+
+}
 function create(userParam) {
     var deferred = Q.defer();
 
