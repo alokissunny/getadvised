@@ -10,7 +10,7 @@ router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/:_id', update);
 router.delete('/:_id', _delete);
-router.get('/', allCategories);
+router.get('/allcat', allCategories);
 
 module.exports = router;
 

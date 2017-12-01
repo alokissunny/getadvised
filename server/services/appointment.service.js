@@ -15,15 +15,16 @@ var service = {};
 
  function bookAppointment(bookParam) {
      var deffered = Q.defer();
-     var bid = createBookingId();
+     var bid = _.uniqueId('bid');//createBookingId();
      bookParam.bookingId = bid;
      db.appointment.insert(bookParam,function(err,res) {
          if (err)
-         deferred.reject(err.name + ': ' + err.message);
-         else
-             deferred.resolve();
+         deffered.reject(err.name + ': ' + err.message);
+             deffered.resolve({
+                 bid : bid
+             });
      });
-     return deffered;
+     return deffered.promise;
 
  }
  function cancelAppointment(appointmentid) {

@@ -4,12 +4,14 @@ var router = express.Router();
 var appointment = require('services/appointment.service');
 
 // routes
-router.post('/bookappointment', bookappointment);
+router.post('/book', bookAppointment);
+router.delete('/cancel?bid', bookAppointment);
+module.exports = router;
 
-function bookappointment(req,res) {
+function bookAppointment(req,res) {
     appointment.bookAppointment(req.body)
-    .then(function () {
-        res.sendStatus = 200;
+    .then(function (obj) {
+        res.status(400).send(obj);
     })
     .catch(function(err) {
          res.status(400).send(err);

@@ -16,14 +16,16 @@ service.getById = getById;
 service.create = create;
 service.update = update;
 service.delete = _delete;
-
+service.allCategories = allCategories;
 module.exports = service;
 
 
 function allCategories() {
     var deffered = Q.defer();
-    deferred.resolve(constants.CATEGORIES);
-    return deffered;
+    setTimeout(function(){
+        deffered.resolve(constants.CATEGORIES);
+    },2)
+    return deffered.promise;
 
 }
 function create(userParam) {
