@@ -19,7 +19,8 @@ function bookAppointment(req,res) {
 
 }
 function cancelAppointment(req, res) {
-    appointment.cancelAppointment(req.body)
+    debugger;
+    appointment.cancelAppointment(req.body.bid)
     .then(function() {
         res.status(200).send("ok");
     })

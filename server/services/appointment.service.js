@@ -28,5 +28,12 @@ var service = {};
 
  }
  function cancelAppointment(appointmentid) {
-
+      var deffered = Q.defer();
+      //todo add security 
+      db.appointment.remove({bookingId : appointmentid}, function(err,res) {
+          if(err)
+          deffered.reject(err.name + ': ' + err.message);
+          deffered.resolve()
+      })
+      return deffered.promise;
  }
