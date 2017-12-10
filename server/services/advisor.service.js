@@ -17,9 +17,25 @@ service.create = create;
 service.update = update;
 service.delete = _delete;
 service.allCategories = allCategories;
+service.getcat = getcat;
 module.exports = service;
 
+function getcat(catid) {
+    var deferred =Q.defer();
+    var query = {
+    category : catid
+};
+    var projection = {
+        hash : false
+    };
+    db.advisors.find(query,projection).toArray(function(err ,result) {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        if(result)
+        deferred.resolve(result);
 
+    });
+    return deferred.promise;
+}
 function allCategories() {
     var deffered = Q.defer();
     setTimeout(function(){
@@ -33,13 +49,13 @@ function create(userParam) {
 
     // validation
     db.advisors.findOne(
-        { username: userParam.username },
+        { username: userParam.userName },
         function (err, user) {
             if (err) deferred.reject(err.name + ': ' + err.message);
 
             if (user) {
                 // username already exists
-                deferred.reject('Username "' + userParam.username + '" is already taken');
+                deferred.reject('Username "' + userParam.userName + '" is already taken');
             } else {
                 createAdvisor();
             }

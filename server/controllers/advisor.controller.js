@@ -7,6 +7,7 @@ var advisorService = require('services/advisor.service');
 router.post('/register', register);
 router.post('/authenticate', authenticate);
 router.get('/', getAll);
+router.get('/get/:_id', getcat);
 router.get('/current', getCurrent);
 router.put('/:_id', update);
 router.delete('/:_id', _delete);
@@ -14,7 +15,15 @@ router.get('/allcat', allCategories);
 
 module.exports = router;
 
-
+function getcat(req,res) {
+    advisorService.getcat(req.params._id)
+        .then(function(advs) {
+            res.send(advs);
+        })
+        .catch(function(err) {
+            res.status(400).send(err);
+        })
+}
 
 //functions
 function allCategories(req,res) {
