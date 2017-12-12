@@ -4,7 +4,10 @@ var router = express.Router();
 var queryService = require('services/query.service');
 
 router.post('/query', postQuery);
-// router.get('/', getAll);
+ router.get('/', getAll);
+//  router.get('/recentQueries/:count', recentQueries);
+  router.get('/advisor/:id',getRequestByAdvisor);
+//  router.get('/requestor/:id', getRequestByRequestor);
 
 module.exports = router;
 
@@ -19,3 +22,40 @@ function postQuery(req,res) {
             res.status(400).send(err);
         });
 }
+function getAll(req,res) {
+    queryService.getAll(req)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+// function recentQueries(req,res) {
+//     queryService.recentQueries(req)
+//         .then(function (res) {
+//             res.sendStatus(res);
+//         })
+//         .catch(function (err) {
+//             res.status(400).send(err);
+//         });
+// }
+
+function getRequestByAdvisor(req,res) {
+    queryService.getRequestByAdvisor(req)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+// function getRequestByRequestor(req,res) {
+//     queryService.getRequestByRequestor(req)
+//         .then(function (res) {
+//             res.sendStatus(res);
+//         })
+//         .catch(function (err) {
+//             res.status(400).send(err);
+//         });
+// }

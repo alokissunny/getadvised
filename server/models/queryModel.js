@@ -3,7 +3,8 @@ var QueryModel = function (data) {
     ret.subject = data.subject;
     ret.message = data.message;
     ret.advisor = data.advisor;
-    ret.requestDate = data.requestDate;
+    ret.requestor = data.requestor;
+    ret.requestOn = data.requestOn;
 
     return ret;
 
