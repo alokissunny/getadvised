@@ -77,7 +77,7 @@ function getRequestByRequestor(req) {
         requestor: req.params.id
     };
     var projection = {
-        _id: true
+       // _id: true
     };
     db.queries.find(query, projection).toArray(function (err, result) {
         if (err)
