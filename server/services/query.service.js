@@ -18,10 +18,45 @@ service.getRequestByAdvisor = getRequestByAdvisor;
 service.getRequestByRequestor = getRequestByRequestor;
 service.recentQueries = recentQueries;
 service.sendReply = sendReply;
+service.updateReadStatus = updateReadStatus;
+service.deleteMessage = deleteMessage;
+
 
 module.exports = service;
 
+function deleteMessage(req) {
+      var deffered = Q.defer();
+    var queryId = req.params.id;
+     var query = {
+        _id: new ObjectID((queryId))
+    }
+    db.queries.remove(query, function(err) {
+         if(err)
+        deffered.reject(err);
+        deffered.resolve();
+    });
+    return deffered.promise;
+}
 
+function updateReadStatus(req) {
+    var deffered = Q.defer();
+    var queryId = req.params.id;
+    var query = {
+        _id: new ObjectID((queryId))
+    }
+    var updateObj = {
+       $set: {
+           unread : false
+       }
+    }
+    db.queries.update(query,updateObj, function (err, res) {
+        if(err)
+        deffered.reject(err);
+        deffered.resolve();
+    });
+
+    return deffered.promise;
+}
 function postQuery(req) {
     var deffered = Q.defer();
     var body = getQuery(req.body);
@@ -79,7 +114,7 @@ function getRequestByRequestor(req) {
     var projection = {
        // _id: true
     };
-    db.queries.find(query, projection).toArray(function (err, result) {
+    db.queries.find(query, projection).sort({requestOn : -1}).toArray(function (err, result) {
         if (err)
             deffered.reject(err);
         deffered.resolve(result);

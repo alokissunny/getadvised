@@ -9,10 +9,30 @@ router.post('/query', postQuery);
   router.get('/advisor/:id',getRequestByAdvisor);
   router.get('/requestor/:id', getRequestByRequestor);
   router.post('/sendreply/:id',sendReply);
+  router.post('/read/:id',updateReadStatus);
+   router.post('/delete/:id',deleteMessage);
 
 module.exports = router;
 
 //functions
+function deleteMessage(req,res) {
+    queryService.deleteMessage(req)
+    .then( function() {
+             res.sendStatus(200);
+        } )
+        .catch(function(err) {
+             res.status(400).send(err);
+        })
+}
+function updateReadStatus(req,res) {
+    queryService.updateReadStatus(req)
+        .then( function() {
+             res.sendStatus(200);
+        } )
+        .catch(function(err) {
+             res.status(400).send(err);
+        })
+}
 
 function postQuery(req,res) {
     queryService.postQuery(req)

@@ -5,6 +5,8 @@ var QueryModel = function (data) {
     ret.advisor = data.advisor;
     ret.requestor = data.requestor;
     ret.requestOn = data.requestOn;
+    ret.unread = data.unread;
+    
 
     return ret;
 
