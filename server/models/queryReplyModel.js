@@ -3,7 +3,7 @@ var ReplyModel = function (data) {
     ret.message = data.message;
     ret.repliedBy = data.repliedBy;
     ret.repliedOn = data.repliedOn;
-
+    ret.reply = data.reply;
     return ret;
 
 }

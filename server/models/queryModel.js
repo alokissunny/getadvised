@@ -6,7 +6,7 @@ var QueryModel = function (data) {
     ret.requestor = data.requestor;
     ret.requestOn = data.requestOn;
     ret.unread = data.unread;
-    
+    ret.reply = data.reply;
 
     return ret;
 
