@@ -143,9 +143,25 @@ function sendReply (req) {
     var query = {
         _id : new ObjectID((queryId))
     }
-    var updateObj = {
+    var update = {};
+    db.queries.find(query, {reply : true}).toArray(function(err, result) {
+         if (err)
+            deffered.reject(err);
+
+        var obj = result[0]["reply"];
+        if (obj == undefined)
+            update = body;
+        else {
+            update = obj;
+            while(obj.reply)
+            {
+                obj = obj.reply;
+            }
+            obj.reply = body;
+        };
+         var updateObj = {
        $set: {
-           reply : body
+           reply : update
        }
     }
     db.queries.update(query,updateObj, function (err, res) {
@@ -153,6 +169,20 @@ function sendReply (req) {
         deffered.reject(err);
         deffered.resolve();
     });
+
+    })
+
+
+    // var updateObj = {
+    //    $set: {
+    //        reply : body
+    //    }
+    // }
+    // db.queries.update(query,updateObj, function (err, res) {
+    //     if(err)
+    //     deffered.reject(err);
+    //     deffered.resolve();
+    // });
 
     return deffered.promise;
 
