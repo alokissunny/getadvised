@@ -49,13 +49,13 @@ function create(userParam) {
 
     // validation
     db.advisors.findOne(
-        { username: userParam.userName },
+        { username: userParam.username },
         function (err, user) {
             if (err) deferred.reject(err.name + ': ' + err.message);
 
             if (user) {
                 // username already exists
-                deferred.reject('Username "' + userParam.userName + '" is already taken');
+                deferred.reject('Username "' + userParam.username + '" is already taken');
             } else {
                 createAdvisor();
             }
@@ -82,7 +82,7 @@ function create(userParam) {
 function authenticate(username, password) {
     var deferred = Q.defer();
 
-    db.advisors.findOne({ userName: username }, function (err, user) {
+    db.advisors.findOne({ username: username }, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user && bcrypt.compareSync(password, user.hash)) {
