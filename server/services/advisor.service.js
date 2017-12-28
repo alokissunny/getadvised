@@ -82,7 +82,7 @@ function create(userParam) {
 function authenticate(username, password) {
     var deferred = Q.defer();
 
-    db.advisors.findOne({ username: username }, function (err, user) {
+    db.advisors.findOne({ userName: username }, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user && bcrypt.compareSync(password, user.hash)) {
@@ -92,6 +92,7 @@ function authenticate(username, password) {
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                isAdvisor : true,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {

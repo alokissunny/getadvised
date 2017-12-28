@@ -1,9 +1,9 @@
 
  const CATMAP = {
-    "FIN" : "finance",
-    "CAR" : "Career",
-    "REL" : "Relationship",
-    "PROP" : "Property",
+    "fin" : "finance",
+    "car" : "Career",
+    "rel" : "Relationship",
+    "prop" : "Property",
 
 }
  const CATEGORIES = [CATMAP.FIN, CATMAP.CAR,CATMAP.REL,CATMAP.PROP];

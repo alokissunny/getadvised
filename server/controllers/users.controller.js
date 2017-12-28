@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var userService = require('services/user.service');
+var advisorService = require('services/advisor.service');
 
 // routes
 router.post('/authenticate', authenticate);
@@ -14,19 +15,38 @@ router.delete('/:_id', _delete);
 module.exports = router;
 
 function authenticate(req, res) {
-    userService.authenticate(req.body.username, req.body.password)
-        .then(function (user) {
-            if (user) {
-                // authentication successful
-                res.send(user);
-            } else {
-                // authentication failed
-                res.status(400).send('Username or password is incorrect');
-            }
-        })
-        .catch(function (err) {
-            res.status(400).send(err);
-        });
+    if (req.body.isAdvisor) {
+        advisorService.authenticate(req.body.username, req.body.password)
+            .then(function (user) {
+                if (user) {
+                    // authentication successful
+                    res.send(user);
+                } else {
+                    // authentication failed
+                    res.status(400).send('advisor or password is incorrect');
+                }
+            })
+            .catch(function (err) {
+                res.status(400).send(err);
+            });
+
+    }
+    else {
+        userService.authenticate(req.body.username, req.body.password)
+            .then(function (user) {
+                if (user) {
+                    // authentication successful
+                    res.send(user);
+                } else {
+                    // authentication failed
+                    res.status(400).send('Username or password is incorrect');
+                }
+            })
+            .catch(function (err) {
+                res.status(400).send(err);
+            });
+    }
+
 }
 
 function register(req, res) {
