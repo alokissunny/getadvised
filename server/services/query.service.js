@@ -20,6 +20,10 @@ service.recentQueries = recentQueries;
 service.sendReply = sendReply;
 service.updateReadStatus = updateReadStatus;
 service.deleteMessage = deleteMessage;
+service.softdeleteForRequestor = softdeleteForRequestor;
+service.softdeleteForAdvisor = softdeleteForAdvisor;
+service.updateReadStatusForRequestor = updateReadStatusForRequestor;
+service.updateReadStatusForAdvisor = updateReadStatusForAdvisor;
 
 
 module.exports = service;
@@ -37,6 +41,43 @@ function deleteMessage(req) {
     });
     return deffered.promise;
 }
+function softdeleteForRequestor(req) {
+      var deffered = Q.defer();
+
+    var queryId = req.params.id;
+     var query = {
+        _id: new ObjectID((queryId))
+    }
+     var updateObj = {
+       $set: {
+           deleteForRequestor : true
+     }};
+    db.queries.update(query,updateObj, function(err) {
+         if(err)
+        deffered.reject(err);
+        deffered.resolve();
+    });
+    return deffered.promise;
+}
+
+function softdeleteForAdvisor(req) {
+      var deffered = Q.defer();
+
+    var queryId = req.params.id;
+     var query = {
+        _id: new ObjectID((queryId))
+    }
+     var updateObj = {
+       $set: {
+           deleteForAdvisor : true
+     }};
+    db.queries.update(query,updateObj, function(err) {
+         if(err)
+        deffered.reject(err);
+        deffered.resolve();
+    });
+    return deffered.promise;
+}
 
 function updateReadStatus(req) {
     var deffered = Q.defer();
@@ -47,6 +88,44 @@ function updateReadStatus(req) {
     var updateObj = {
        $set: {
            unread : false
+       }
+    }
+    db.queries.update(query,updateObj, function (err, res) {
+        if(err)
+        deffered.reject(err);
+        deffered.resolve();
+    });
+
+    return deffered.promise;
+}
+function updateReadStatusForRequestor(req) {
+    var deffered = Q.defer();
+    var queryId = req.params.id;
+    var query = {
+        _id: new ObjectID((queryId))
+    }
+    var updateObj = {
+       $set: {
+           unreadForRequestor : false
+       }
+    }
+    db.queries.update(query,updateObj, function (err, res) {
+        if(err)
+        deffered.reject(err);
+        deffered.resolve();
+    });
+
+    return deffered.promise;
+}
+function updateReadStatusForAdvisor(req) {
+    var deffered = Q.defer();
+    var queryId = req.params.id;
+    var query = {
+        _id: new ObjectID((queryId))
+    }
+    var updateObj = {
+       $set: {
+           unreadForAdvisor : false
        }
     }
     db.queries.update(query,updateObj, function (err, res) {
@@ -92,7 +171,8 @@ function getAll(req) {
 function getRequestByAdvisor(req) {
     var deffered = Q.defer();
     var query = {
-        advisor: req.params.id
+        advisor: req.params.id,
+        deleteForAdvisor : false
     };
     var projection = {
       //  _id: true
@@ -109,7 +189,8 @@ function getRequestByAdvisor(req) {
 function getRequestByRequestor(req) {
     var deffered = Q.defer();
     var query = {
-        requestor: req.params.id
+        requestor: req.params.id ,
+         deleteForRequestor: false
     };
     var projection = {
        // _id: true
@@ -161,6 +242,8 @@ function sendReply (req) {
         };
          var updateObj = {
        $set: {
+           unreadForAdvisor: true,
+           unreadForRequestor : true ,
            reply : update
        }
     }
@@ -171,19 +254,6 @@ function sendReply (req) {
     });
 
     })
-
-
-    // var updateObj = {
-    //    $set: {
-    //        reply : body
-    //    }
-    // }
-    // db.queries.update(query,updateObj, function (err, res) {
-    //     if(err)
-    //     deffered.reject(err);
-    //     deffered.resolve();
-    // });
-
     return deffered.promise;
 
 }
