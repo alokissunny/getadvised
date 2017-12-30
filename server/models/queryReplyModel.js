@@ -4,6 +4,7 @@ var ReplyModel = function (data) {
     ret.repliedBy = data.repliedBy;
     ret.repliedOn = data.repliedOn;
     ret.reply = data.reply;
+    ret.lastUpdatedFrom = data.lastUpdatedFrom;
     return ret;
 
 }

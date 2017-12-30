@@ -10,6 +10,7 @@ var QueryModel = function (data) {
     ret.reply = data.reply;
     ret.deleteForRequestor = data.deleteForRequestor;
     ret.deleteForAdvisor = data.deleteForAdvisor;
+    ret.lastUpdatedFrom = data.lastUpdatedFrom;
     return ret;
 
 }

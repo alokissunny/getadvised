@@ -177,7 +177,7 @@ function getRequestByAdvisor(req) {
     var projection = {
       //  _id: true
     };
-    db.queries.find(query, projection).toArray(function (err, result) {
+    db.queries.find(query, projection).sort({requestOn : -1}).toArray(function (err, result) {
         if (err)
             deffered.reject(err);
         deffered.resolve(result);
@@ -242,6 +242,7 @@ function sendReply (req) {
         };
          var updateObj = {
        $set: {
+           lastUpdatedFrom :  body.lastUpdatedFrom,
            unreadForAdvisor: true,
            unreadForRequestor : true ,
            reply : update
