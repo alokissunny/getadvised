@@ -6,6 +6,7 @@ var appointment = require('services/appointment.service');
 // routes
 router.post('/book', bookAppointment);
 router.post('/cancel', cancelAppointment);
+router.get('/advisor/:id', findAppointmentByAdvisor);
 module.exports = router;
 
 function bookAppointment(req,res) {
@@ -19,12 +20,21 @@ function bookAppointment(req,res) {
 
 }
 function cancelAppointment(req, res) {
-    debugger;
     appointment.cancelAppointment(req.body.bid)
     .then(function() {
         res.status(200).send("ok");
     })
     .catch(function(err) {
         res.status(400).send(err);
+    })
+}
+
+function findAppointmentByAdvisor (req, res ) {
+    appointment.findAppointmentByAdvisor(req)
+    .then(function (appointments) {
+        res.status(200).send(appointments);
+    })
+    .catch(function(err) {
+         res.status(400).send(err);
     })
 }

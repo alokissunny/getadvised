@@ -11,6 +11,7 @@ var service = {};
 
  service.bookAppointment = bookAppointment;
   service.cancelAppointment = cancelAppointment;
+  service.findAppointmentByAdvisor = findAppointmentByAdvisor;
  module.exports = service;
 
  function bookAppointment(bookParam) {
@@ -36,4 +37,16 @@ var service = {};
           deffered.resolve()
       })
       return deffered.promise;
+ }
+
+ function findAppointmentByAdvisor(request) {
+     var deffered = Q.defer();
+     var query = {"advisor" :  request.params.id};
+     db.appointment.find(query).toArray(function (err, result) {
+        if (err)
+            deffered.reject(err);
+        deffered.resolve(result);
+    });
+    return deffered.promise;
+
  }
