@@ -7,6 +7,7 @@ var BookModel = function (data) {
     ret.advisor = data.advisor;
     ret.advisorName = data.advisorName;
     ret.message = data.message;
+    ret.time = data.time;
     return ret;
 
 }
