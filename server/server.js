@@ -7,6 +7,14 @@ var expressJwt = require('express-jwt');
 var config = require('config.json');
 
 app.use(cors());
+//create a cors middleware
+// app.use(function(req, res, next) {
+// //set headers to allow cross origin request.
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -21,13 +29,14 @@ app.use(expressJwt({
         }
         return null;
     }
-}).unless({ path: ['/users/authenticate', '/users/register','/advisors/register','/advisors/get/fin'] }));
+}).unless({ path: ['/users/authenticate', '/users/register','/advisors/register','/advisors/get/fin' , '/upload'] }));
 
 // routes
 app.use('/users', require('./controllers/users.controller'));
 app.use('/advisors', require('./controllers/advisor.controller'));
 app.use('/appointment', require('./controllers/appointment.controller'));
 app.use('/ask', require('./controllers/query.controller'));
+app.use('/upload', require('./controllers/file-upload.controller'));
 
 
 // start server
