@@ -5,7 +5,7 @@ var router = express.Router();
 //require multer for the file uploads
 var multer = require('multer');
 // set the directory for the uploads to the uploaded to
-var DIR = '../uploads/';
+var DIR = '../uploads/images';
 //define the type of upload multer would be doing and pass in its destination, in our case, its a single file with the name photo
 var upload = multer({dest: DIR}).single('photo');
 /* GET home page. */
@@ -26,7 +26,7 @@ router.post('/', function (req, res, next) {
         }  
        // No error occured.
         path = req.file.path;
-        return res.send("Upload Completed for "+path); 
+        return res.send({"profile-id" : path}); 
   });     
 })
 module.exports = router;
