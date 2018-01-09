@@ -27,8 +27,21 @@ router.post('/', function (req, res, next) {
         }
        // No error occured.
         path = req.file.path;
-        fileService.updateDpInfo(req);
         return res.send({"profile-id" : path});
   });
-})
+});
+router.post('/updateimage',updatePicInfo);
 module.exports = router;
+
+function updatePicInfo(req,res) {
+
+  fileService.updatePicInfo(req)
+    .then(function (obj) {
+        res.status(200).send(obj);
+    })
+    .catch(function(err) {
+         res.status(400).send(err);
+    })
+
+}
+   

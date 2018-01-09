@@ -9,11 +9,22 @@ var db = mongo.db(config.connectionString, { native_parser: true });
 db.bind('users');
 
 var service = {};
-service.updateDpInfo = updateDpInfo;
+service.updatePicInfo = updatePicInfo;
 
 module.exports = service;
 
-function updateDpInfo(req){
+function updatePicInfo(req){
     var deferred = Q.defer();
+    query ={"username" : req.body.me};
+    updateObj = {
+         $set: {
+           photo : req.body.photo
+     }};
+    
+    db.users.update(query,updateObj,function(err) {
+         if(err)
+        deferred.reject(err);
+        deferred.resolve();
+    });
     return deferred.promise;
 };
