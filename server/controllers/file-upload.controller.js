@@ -1,5 +1,6 @@
 //require express library
 var express = require('express');
+var fileService = require('services/file-upload.service');
 //require the express router
 var router = express.Router();
 //require multer for the file uploads
@@ -23,10 +24,11 @@ router.post('/', function (req, res, next) {
           // An error occurred when uploading
           console.log(err);
           return res.status(422).send("an Error occured")
-        }  
+        }
        // No error occured.
         path = req.file.path;
-        return res.send({"profile-id" : path}); 
-  });     
+        fileService.updateDpInfo(req);
+        return res.send({"profile-id" : path});
+  });
 })
 module.exports = router;
