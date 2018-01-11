@@ -92,6 +92,7 @@ function authenticate(username, password) {
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                photo: user.photo,
                 isAdvisor : true,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
