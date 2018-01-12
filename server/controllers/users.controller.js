@@ -7,6 +7,7 @@ var advisorService = require('services/advisor.service');
 // routes
 router.post('/authenticate', authenticate);
 router.post('/register', register);
+router.post('/modify', modifyUser);
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.put('/:_id', update);
@@ -53,6 +54,15 @@ function register(req, res) {
     userService.create(req.body)
         .then(function () {
             res.sendStatus(200);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+function modifyUser(req,res) {
+    userService.modifyUser(req)
+        .then(function (user) {
+            res.send(user);
         })
         .catch(function (err) {
             res.status(400).send(err);

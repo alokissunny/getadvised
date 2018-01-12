@@ -15,6 +15,7 @@ service.getById = getById;
 service.create = create;
 service.update = update;
 service.delete = _delete;
+service.modifyUser = modifyUser;
 
 module.exports = service;
 
@@ -32,6 +33,7 @@ function authenticate(username, password) {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 photo: user.photo,
+                email : user.email,
                  isAdvisor : false,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
@@ -114,7 +116,22 @@ function create(userParam) {
 
     return deferred.promise;
 }
-
+function modifyUser(req) {
+     var deferred = Q.defer();
+     var query = {username : req.body.username }
+     var updateObj = {
+         $set : {
+             firstName : req.body.firstName,
+             lastName : req.body.lastName,
+             email : req.body.email
+         }
+     }
+     db.users.update(query,updateObj,function(err,user) {
+         if (err) deferred.reject(err.name + ': ' + err.message);
+          deferred.resolve(user);
+     });
+     return deferred.promise;
+}
 function update(_id, userParam) {
     var deferred = Q.defer();
 
