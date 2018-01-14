@@ -18,6 +18,7 @@ service.update = update;
 service.delete = _delete;
 service.allCategories = allCategories;
 service.getcat = getcat;
+service.modifyUser = modifyUser;
 module.exports = service;
 
 function getcat(catid) {
@@ -94,6 +95,8 @@ function authenticate(username, password) {
                 lastName: user.lastName,
                 photo: user.photo,
                 isAdvisor : true,
+                category :user.category,
+                email : user.email,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -202,4 +205,22 @@ function _delete(_id) {
         });
 
     return deferred.promise;
+}
+function modifyUser(req) {
+     var deferred = Q.defer();
+     var query = {username : req.body.username }
+     var updateObj = {
+         $set : {
+             firstName : req.body.firstName,
+             lastName : req.body.lastName,
+             email : req.body.email,
+             category : req.body.category,
+             basicInfo : req.body.basicInfo
+         }
+     }
+     db.advisors.update(query,updateObj,function(err,user) {
+         if (err) deferred.reject(err.name + ': ' + err.message);
+          deferred.resolve(user);
+     });
+     return deferred.promise;
 }

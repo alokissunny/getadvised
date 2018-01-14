@@ -59,14 +59,26 @@ function register(req, res) {
             res.status(400).send(err);
         });
 }
-function modifyUser(req,res) {
-    userService.modifyUser(req)
-        .then(function (user) {
-            res.send(user);
-        })
-        .catch(function (err) {
-            res.status(400).send(err);
-        });
+function modifyUser(req, res) {
+    if (req.body.isAdvisor) {
+        advisorService.modifyUser(req)
+            .then(function (user) {
+                res.send(user);
+            })
+            .catch(function (err) {
+                res.status(400).send(err);
+            });
+    }
+    else {
+        userService.modifyUser(req)
+            .then(function (user) {
+                res.send(user);
+            })
+            .catch(function (err) {
+                res.status(400).send(err);
+            });
+    }
+
 }
 
 function getAll(req, res) {

@@ -8,7 +8,7 @@ router.post('/register', register);
 router.post('/authenticate', authenticate);
 router.get('/', getAll);
 router.get('/get/:_id', getcat);
-router.get('/current', getCurrent);
+router.get('/current/:id', getCurrent);
 router.put('/:_id', update);
 router.delete('/:_id', _delete);
 router.get('/allcat', allCategories);
@@ -70,7 +70,7 @@ function getAll(req, res) {
 }
 
 function getCurrent(req, res) {
-    advisorService.getById(req.user.sub)
+    advisorService.getById(req.params.id)
         .then(function (user) {
             if (user) {
                 res.send(user);
