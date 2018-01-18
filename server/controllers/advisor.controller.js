@@ -16,7 +16,7 @@ router.get('/allcat', allCategories);
 module.exports = router;
 
 function getcat(req,res) {
-    advisorService.getcat(req.params._id)
+    advisorService.getcat(req)
         .then(function(advs) {
             res.send(advs);
         })

@@ -21,21 +21,39 @@ service.getcat = getcat;
 service.modifyUser = modifyUser;
 module.exports = service;
 
-function getcat(catid) {
+function getcat(req) {
     var deferred =Q.defer();
     var query = {
-    category : catid
+    category : req.params._id
 };
+var lat = req.query.lat;
+var lng = req.query.lng;
+
     var projection = {
         hash : false
     };
     db.advisors.find(query,projection).toArray(function(err ,result) {
         if (err) deferred.reject(err.name + ': ' + err.message);
         if(result)
+        if(lat && lng) {
+            result = filterResult(result,lat,lng);
+        }
         deferred.resolve(result);
 
     });
     return deferred.promise;
+}
+function filterResult(result,lat,lng) {
+    var temp =[];
+for (var i = 0; i < result.length; i ++) {
+    var distance = (lat-result[i].lat)*(lat-result[i].lat) + (lng-result[i].lng)*(lng-result[i].lng)
+    result[i].distance = distance;
+}
+result.sort((res1, res2) => {
+    return res1.distance - res2.distance;
+
+})
+return result;
 }
 function allCategories() {
     var deffered = Q.defer();
