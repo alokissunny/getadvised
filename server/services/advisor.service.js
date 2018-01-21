@@ -19,6 +19,7 @@ service.delete = _delete;
 service.allCategories = allCategories;
 service.getcat = getcat;
 service.modifyUser = modifyUser;
+service.getEmail = getEmail;
 module.exports = service;
 
 function getcat(req) {
@@ -248,6 +249,15 @@ function modifyUser(req) {
      db.advisors.update(query,updateObj,function(err,user) {
          if (err) deferred.reject(err.name + ': ' + err.message);
           deferred.resolve(user);
+     });
+     return deferred.promise;
+}
+function getEmail(advisor) {
+     var deferred = Q.defer();
+     var query = {username : advisor};
+     db.advisors.findOne(query,function(err,user) {
+         if (err) deferred.reject(err.name + ': ' + err.message);
+         deferred.resolve(user);
      });
      return deferred.promise;
 }
