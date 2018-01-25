@@ -30,6 +30,7 @@ app.use('/advisors', require('./controllers/advisor.controller'));
 app.use('/appointment', require('./controllers/appointment.controller'));
 app.use('/ask', require('./controllers/query.controller'));
 app.use('/upload', require('./controllers/file-upload.controller'));
+app.use('/comment', require('./controllers/comment.controller'));
 
 
 // start server
