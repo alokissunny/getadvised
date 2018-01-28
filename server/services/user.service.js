@@ -34,6 +34,9 @@ function authenticate(username, password) {
                 lastName: user.lastName,
                 photo: user.photo,
                 email : user.email,
+                city: user.city,
+                lat: user.lat,
+                lng: user.lng,
                  isAdvisor : false,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
@@ -123,7 +126,10 @@ function modifyUser(req) {
          $set : {
              firstName : req.body.firstName,
              lastName : req.body.lastName,
-             email : req.body.email
+             email : req.body.email,
+             city: req.body.city,
+             lat: req.body.lat,
+             lng: req.body.lng
          }
      }
      db.users.update(query,updateObj,function(err,user) {
