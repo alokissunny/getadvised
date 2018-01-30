@@ -12,6 +12,7 @@ router.get('/current/:id', getCurrent);
 router.put('/:_id', update);
 router.delete('/:_id', _delete);
 router.get('/allcat', allCategories);
+router.post('/rate',updateRating);
 
 module.exports = router;
 
@@ -96,6 +97,15 @@ function update(req, res) {
 function _delete(req, res) {
     advisorService.delete(req.params._id)
         .then(function () {
+            res.sendStatus(200);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+function updateRating(req,res) {
+    advisorService.updateRating(req)
+    .then(function () {
             res.sendStatus(200);
         })
         .catch(function (err) {

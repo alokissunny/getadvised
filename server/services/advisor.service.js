@@ -20,6 +20,7 @@ service.allCategories = allCategories;
 service.getcat = getcat;
 service.modifyUser = modifyUser;
 service.getEmail = getEmail;
+service.updateRating = updateRating;
 module.exports = service;
 
 function getcat(req) {
@@ -244,6 +245,21 @@ function modifyUser(req) {
              city: req.body.city,
              lat : req.body.lat,
              lng : req.body.lng
+         }
+     }
+     db.advisors.update(query,updateObj,function(err,user) {
+         if (err) deferred.reject(err.name + ': ' + err.message);
+          deferred.resolve(user);
+     });
+     return deferred.promise;
+}
+function updateRating(req) {
+    var deferred = Q.defer();
+     var query = {username : req.body.username }
+     var updateObj = {
+         $set : {
+             currentRating : req.body.currentRating,
+             rateCount : req.body.rateCount
          }
      }
      db.advisors.update(query,updateObj,function(err,user) {
