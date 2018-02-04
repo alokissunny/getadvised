@@ -31,6 +31,7 @@ app.use('/appointment', require('./controllers/appointment.controller'));
 app.use('/ask', require('./controllers/query.controller'));
 app.use('/upload', require('./controllers/file-upload.controller'));
 app.use('/comment', require('./controllers/comment.controller'));
+app.use('/fav', require('./controllers/fav.controller'));
 
 
 // start server

@@ -277,3 +277,6 @@ function getEmail(advisor) {
      });
      return deferred.promise;
 }
+function isUnique(username) {
+    
+}
