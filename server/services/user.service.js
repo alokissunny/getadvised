@@ -203,3 +203,12 @@ function _delete(_id) {
 
     return deferred.promise;
 }
+function isUnique(username) {
+    var deferred = Q.defer();
+    var query = { username: username };
+    db.users.findOne(err, function (err, user) {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        deferred.resolve(user);
+    });
+    return deferred.promise;
+}

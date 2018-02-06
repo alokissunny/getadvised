@@ -10,7 +10,7 @@ db.bind('advisors');
 
 var service = {};
 
- service.authenticate = authenticate;
+service.authenticate = authenticate;
 service.getAll = getAll;
 service.getById = getById;
 service.create = create;
@@ -24,44 +24,44 @@ service.updateRating = updateRating;
 module.exports = service;
 
 function getcat(req) {
-    var deferred =Q.defer();
+    var deferred = Q.defer();
     var query = {
-    category : req.params._id
-};
-var lat = req.query.lat;
-var lng = req.query.lng;
+        category: req.params._id
+    };
+    var lat = req.query.lat;
+    var lng = req.query.lng;
 
     var projection = {
-        hash : false
+        hash: false
     };
-    db.advisors.find(query,projection).toArray(function(err ,result) {
+    db.advisors.find(query, projection).toArray(function (err, result) {
         if (err) deferred.reject(err.name + ': ' + err.message);
-        if(result)
-        if(lat && lng) {
-            result = filterResult(result,lat,lng);
-        }
+        if (result)
+            if (lat && lng) {
+                result = filterResult(result, lat, lng);
+            }
         deferred.resolve(result);
 
     });
     return deferred.promise;
 }
-function filterResult(result,lat,lng) {
-    var temp =[];
-for (var i = 0; i < result.length; i ++) {
-    var distance = (lat-result[i].lat)*(lat-result[i].lat) + (lng-result[i].lng)*(lng-result[i].lng)
-    result[i].distance = distance;
-}
-result.sort((res1, res2) => {
-    return res1.distance - res2.distance;
+function filterResult(result, lat, lng) {
+    var temp = [];
+    for (var i = 0; i < result.length; i++) {
+        var distance = (lat - result[i].lat) * (lat - result[i].lat) + (lng - result[i].lng) * (lng - result[i].lng)
+        result[i].distance = distance;
+    }
+    result.sort((res1, res2) => {
+        return res1.distance - res2.distance;
 
-})
-return result;
+    })
+    return result;
 }
 function allCategories() {
     var deffered = Q.defer();
-    setTimeout(function(){
+    setTimeout(function () {
         deffered.resolve(constants.CATEGORIES);
-    },2)
+    }, 2)
     return deffered.promise;
 
 }
@@ -114,14 +114,14 @@ function authenticate(username, password) {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 photo: user.photo,
-                isAdvisor : true,
-                category :user.category,
-                email : user.email,
+                isAdvisor: true,
+                category: user.category,
+                email: user.email,
                 city: user.city,
-                location : user.location,
+                location: user.location,
                 lat: user.lat,
-                lng : user.lng,
-                basicInfo : user.basicInfo,
+                lng: user.lng,
+                basicInfo: user.basicInfo,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -232,51 +232,57 @@ function _delete(_id) {
     return deferred.promise;
 }
 function modifyUser(req) {
-     var deferred = Q.defer();
-     var query = {username : req.body.username }
-     var updateObj = {
-         $set : {
-             firstName : req.body.firstName,
-             lastName : req.body.lastName,
-             email : req.body.email,
-             category : req.body.category,
-             basicInfo : req.body.basicInfo,
-             location : req.body.location,
-             city: req.body.city,
-             lat : req.body.lat,
-             lng : req.body.lng
-         }
-     }
-     db.advisors.update(query,updateObj,function(err,user) {
-         if (err) deferred.reject(err.name + ': ' + err.message);
-          deferred.resolve(user);
-     });
-     return deferred.promise;
+    var deferred = Q.defer();
+    var query = { username: req.body.username }
+    var updateObj = {
+        $set: {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            category: req.body.category,
+            basicInfo: req.body.basicInfo,
+            location: req.body.location,
+            city: req.body.city,
+            lat: req.body.lat,
+            lng: req.body.lng
+        }
+    }
+    db.advisors.update(query, updateObj, function (err, user) {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        deferred.resolve(user);
+    });
+    return deferred.promise;
 }
 function updateRating(req) {
     var deferred = Q.defer();
-     var query = {username : req.body.username }
-     var updateObj = {
-         $set : {
-             currentRating : req.body.currentRating,
-             rateCount : req.body.rateCount
-         }
-     }
-     db.advisors.update(query,updateObj,function(err,user) {
-         if (err) deferred.reject(err.name + ': ' + err.message);
-          deferred.resolve(user);
-     });
-     return deferred.promise;
+    var query = { username: req.body.username }
+    var updateObj = {
+        $set: {
+            currentRating: req.body.currentRating,
+            rateCount: req.body.rateCount
+        }
+    }
+    db.advisors.update(query, updateObj, function (err, user) {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        deferred.resolve(user);
+    });
+    return deferred.promise;
 }
 function getEmail(advisor) {
-     var deferred = Q.defer();
-     var query = {username : advisor};
-     db.advisors.findOne(query,function(err,user) {
-         if (err) deferred.reject(err.name + ': ' + err.message);
-         deferred.resolve(user);
-     });
-     return deferred.promise;
+    var deferred = Q.defer();
+    var query = { username: advisor };
+    db.advisors.findOne(query, function (err, user) {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        deferred.resolve(user);
+    });
+    return deferred.promise;
 }
 function isUnique(username) {
-    
+    var deferred = Q.defer();
+    var query = { username: username };
+    db.advisors.findOne(err, function (err, user) {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+        deferred.resolve(user);
+    });
+    return deferred.promise;
 }
