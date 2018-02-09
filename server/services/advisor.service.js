@@ -6,7 +6,9 @@ var bcrypt = require('bcryptjs');
 var Q = require('q');
 var mongo = require('mongoskin');
 var db = mongo.db(config.connectionString, { native_parser: true });
+var userService = require('services/user.service');
 db.bind('advisors');
+
 
 var service = {};
 
@@ -21,6 +23,7 @@ service.getcat = getcat;
 service.modifyUser = modifyUser;
 service.getEmail = getEmail;
 service.updateRating = updateRating;
+service.isUnique = isUnique;
 module.exports = service;
 
 function getcat(req) {
@@ -67,20 +70,26 @@ function allCategories() {
 }
 function create(userParam) {
     var deferred = Q.defer();
-
-    // validation
-    db.advisors.findOne(
-        { username: userParam.username },
-        function (err, user) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
-
-            if (user) {
-                // username already exists
+    isUnique(userParam.username)
+        .then((user) => {
+            if (user)
                 deferred.reject('Username "' + userParam.username + '" is already taken');
-            } else {
-                createAdvisor();
+            else {
+                userService.isUnique(userParam.username)
+                    .then((user) => {
+                        if (user) {
+                            deferred.reject('Username "' + userParam.username + '" is already taken');
+                        }
+                        else {
+                            createAdvisor();
+                        }
+                    })
+
             }
-        });
+        })
+        .catch((err) => {
+            if (err) deferred.reject(err.name + ': ' + err.message);
+        })
 
     function createAdvisor() {
         // set user object to userParam without the cleartext password
@@ -280,7 +289,7 @@ function getEmail(advisor) {
 function isUnique(username) {
     var deferred = Q.defer();
     var query = { username: username };
-    db.advisors.findOne(err, function (err, user) {
+    db.advisors.findOne(query, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
         deferred.resolve(user);
     });

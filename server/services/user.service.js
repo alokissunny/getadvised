@@ -5,6 +5,7 @@ var bcrypt = require('bcryptjs');
 var Q = require('q');
 var mongo = require('mongoskin');
 var db = mongo.db(config.connectionString, { native_parser: true });
+var advisorService = require('services/advisor.service');
 db.bind('users');
 
 var service = {};
@@ -16,6 +17,7 @@ service.create = create;
 service.update = update;
 service.delete = _delete;
 service.modifyUser = modifyUser;
+service.isUnique = isUnique;
 
 module.exports = service;
 
@@ -88,18 +90,38 @@ function create(userParam) {
     var deferred = Q.defer();
 
     // validation
-    db.users.findOne(
-        { username: userParam.username },
-        function (err, user) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
+    // db.users.findOne(
+    //     { username: userParam.username },
+    //     function (err, user) {
+    //         if (err) deferred.reject(err.name + ': ' + err.message);
 
-            if (user) {
-                // username already exists
+    //         if (user) {
+    //             // username already exists
+    //             deferred.reject('Username "' + userParam.username + '" is already taken');
+    //         } else {
+    //             createUser();
+    //         }
+    //     });
+        isUnique(userParam.username)
+        .then((user) => {
+            if (user)
                 deferred.reject('Username "' + userParam.username + '" is already taken');
-            } else {
-                createUser();
+            else {
+                advisorService.isUnique(userParam.username)
+                    .then((user) => {
+                        if (user) {
+                            deferred.reject('Username "' + userParam.username + '" is already taken');
+                        }
+                        else {
+                            createUser();
+                        }
+                    })
+
             }
-        });
+        })
+        .catch((err) => {
+            if (err) deferred.reject(err.name + ': ' + err.message);
+        })
 
     function createUser() {
         // set user object to userParam without the cleartext password
@@ -206,7 +228,7 @@ function _delete(_id) {
 function isUnique(username) {
     var deferred = Q.defer();
     var query = { username: username };
-    db.users.findOne(err, function (err, user) {
+    db.users.findOne(query, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
         deferred.resolve(user);
     });
