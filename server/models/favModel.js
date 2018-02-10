@@ -3,6 +3,7 @@ var FavModel = function (data) {
     ret.username = data.username;
     ret.fav = data.fav;
     ret.favCat = data.favCat;
+    ret._id = data._id;
     
     return ret;
 

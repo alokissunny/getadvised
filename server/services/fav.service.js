@@ -11,6 +11,8 @@ db.bind('fav');
 var service = {};
 
 service.addToFav = addToFav;
+service.getFav = getFav;
+service.removeFav = removeFav;
 
 module.exports = service;
 
@@ -26,5 +28,30 @@ function addToFav(req) {
                 deferred.resolve();
             });
             return deferred.promise;
+
+}
+function getFav(username) {
+     var deferred = Q.defer();
+     var query = {username : username};
+     db.fav.find(query).toArray(function (err, result){
+        if(err) {
+            deferred.reject(err);
+        }
+        deferred.resolve(result);
+     });
+     return deferred.promise;
+
+}
+function removeFav(req) {
+    var body = req.body;
+     var deferred = Q.defer();
+     var query = { $and : [{username : body.username} , {fav : body.fav}]} ;
+     db.fav.remove(query,function (err){
+        if(err) {
+            deferred.reject(err);
+        }
+        deferred.resolve();
+     });
+     return deferred.promise;
 
 }

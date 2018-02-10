@@ -24,6 +24,7 @@ service.modifyUser = modifyUser;
 service.getEmail = getEmail;
 service.updateRating = updateRating;
 service.isUnique = isUnique;
+service.getByUsernames = getByUsernames;
 module.exports = service;
 
 function getcat(req) {
@@ -69,6 +70,7 @@ function allCategories() {
 
 }
 function create(userParam) {
+    var userService = require('services/user.service');
     var deferred = Q.defer();
     isUnique(userParam.username)
         .then((user) => {
@@ -173,6 +175,24 @@ function getById(_id) {
         }
     });
 
+    return deferred.promise;
+}
+function getByUsernames(usernames) {
+    var deferred = Q.defer();
+    var conditions = [];
+    var projection = {hash : false};
+    var query = {$or : conditions}
+    for(var i = 0; i < usernames.length ; i++) {
+        var q = {username : usernames[i]};
+        conditions.push(q);
+    };
+    db.advisors.find(query, projection).toArray(function(err, res) {
+        if(err) {
+            deferred.reject(err);
+        }
+        deferred.resolve(res);
+    })
+   
     return deferred.promise;
 }
 function update(_id, userParam) {
