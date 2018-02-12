@@ -9,44 +9,58 @@ db.bind('appointment');
 
 var service = {};
 
- service.bookAppointment = bookAppointment;
-  service.cancelAppointment = cancelAppointment;
-  service.findAppointmentByAdvisor = findAppointmentByAdvisor;
- module.exports = service;
+service.bookAppointment = bookAppointment;
+service.cancelAppointment = cancelAppointment;
+service.findAppointmentByAdvisor = findAppointmentByAdvisor;
+service.findAppointmentByRequestor = findAppointmentByRequestor;
 
- function bookAppointment(bookParam) {
-     var deffered = Q.defer();
-     var bid = _.uniqueId('bid');//createBookingId();
-     bookParam.bookingId = bid;
-     db.appointment.insert(bookParam,function(err,res) {
-         if (err)
-         deffered.reject(err.name + ': ' + err.message);
-             deffered.resolve({
-                 bid : bid
-             });
-     });
-     return deffered.promise;
+module.exports = service;
 
- }
- function cancelAppointment(appointmentid) {
-      var deffered = Q.defer();
-      //todo add security 
-      db.appointment.remove({bookingId : appointmentid}, function(err,res) {
-          if(err)
-          deffered.reject(err.name + ': ' + err.message);
-          deffered.resolve()
-      })
-      return deffered.promise;
- }
+function bookAppointment(bookParam) {
+    var deffered = Q.defer();
+    var bid = _.uniqueId('bid');//createBookingId();
+    bookParam.bookingId = bid;
+    db.appointment.insert(bookParam, function (err, res) {
+        if (err)
+            deffered.reject(err.name + ': ' + err.message);
+        deffered.resolve({
+            bid: bid
+        });
+    });
+    return deffered.promise;
 
- function findAppointmentByAdvisor(request) {
-     var deffered = Q.defer();
-     var query = {"advisor" :  request.params.id};
-     db.appointment.find(query).toArray(function (err, result) {
+}
+function cancelAppointment(appointmentid) {
+    var deffered = Q.defer();
+    //todo add security 
+    db.appointment.remove({ bookingId: appointmentid }, function (err, res) {
+        if (err)
+            deffered.reject(err.name + ': ' + err.message);
+        deffered.resolve()
+    })
+    return deffered.promise;
+}
+
+function findAppointmentByAdvisor(request) {
+    var deffered = Q.defer();
+    var query = { "advisor": request.params.id };
+    db.appointment.find(query).toArray(function (err, result) {
         if (err)
             deffered.reject(err);
         deffered.resolve(result);
     });
     return deffered.promise;
 
- }
+}
+
+function findAppointmentByRequestor(request) {
+    var deffered = Q.defer();
+    var query = { "requestor": request.params.id };
+    db.appointment.find(query).toArray(function (err, result) {
+        if (err)
+            deffered.reject(err);
+        deffered.resolve(result);
+    });
+    return deffered.promise;
+
+}

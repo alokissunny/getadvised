@@ -2,6 +2,8 @@ var config = require('config.json');
 var express = require('express');
 var router = express.Router();
 var advisorService = require('services/advisor.service');
+var userService = require('services/user.service');
+var favService = require('services/fav.service');
 
 //routes
 router.post('/register', register);
@@ -9,32 +11,33 @@ router.post('/authenticate', authenticate);
 router.get('/', getAll);
 router.get('/get/:_id', getcat);
 router.get('/current/:id', getCurrent);
+router.get('/fav/:id', getfavlist);
 router.put('/:_id', update);
 router.delete('/:_id', _delete);
 router.get('/allcat', allCategories);
-router.post('/rate',updateRating);
+router.post('/rate', updateRating);
 
 module.exports = router;
 
-function getcat(req,res) {
+function getcat(req, res) {
     advisorService.getcat(req)
-        .then(function(advs) {
+        .then(function (advs) {
             res.send(advs);
         })
-        .catch(function(err) {
+        .catch(function (err) {
             res.status(400).send(err);
         })
 }
 
 //functions
-function allCategories(req,res) {
+function allCategories(req, res) {
     advisorService.allCategories()
-    .then(function(cats){
-        res.send(cats);
-    })
-    .catch(function(err) {
-         res.status(400).send(err);
-    })
+        .then(function (cats) {
+            res.send(cats);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        })
 }
 function register(req, res) {
     advisorService.create(req.body)
@@ -84,6 +87,32 @@ function getCurrent(req, res) {
         });
 }
 
+function getfavlist(req, res) {
+    favService.getFav(req.params.id)
+        .then(function (result) {
+            var usernames = [];
+            for (var i = 0; i < result.length; i++) {
+                usernames.push(result[i]["fav"]);
+            }
+            if(usernames.length == 0 ) {
+                res.send([]);
+            }
+            else {
+            advisorService.getByUsernames(usernames)
+                .then(function (result) {
+                    res.send(result);
+                })
+                .catch(err => {
+                    res.status(400).send(err);
+                });
+            }
+
+        })
+        .catch(err => {
+            res.status(400).send(err);
+        });
+}
+
 function update(req, res) {
     advisorService.update(req.params._id, req.body)
         .then(function () {
@@ -103,9 +132,9 @@ function _delete(req, res) {
             res.status(400).send(err);
         });
 }
-function updateRating(req,res) {
+function updateRating(req, res) {
     advisorService.updateRating(req)
-    .then(function () {
+        .then(function () {
             res.sendStatus(200);
         })
         .catch(function (err) {
