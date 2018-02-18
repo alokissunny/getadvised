@@ -128,11 +128,14 @@ function authenticate(username, password) {
                 isAdvisor: true,
                 category: user.category,
                 email: user.email,
+                phone : user.phone,
                 city: user.city,
                 location: user.location,
                 lat: user.lat,
                 lng: user.lng,
                 basicInfo: user.basicInfo,
+                skills: user.skills,
+                bname: user.bname,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
         } else {
@@ -273,7 +276,9 @@ function modifyUser(req) {
             location: req.body.location,
             city: req.body.city,
             lat: req.body.lat,
-            lng: req.body.lng
+            lng: req.body.lng,
+            phone: req.body.phone,
+            skills: req.body.skills
         }
     }
     db.advisors.update(query, updateObj, function (err, user) {

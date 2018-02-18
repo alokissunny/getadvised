@@ -39,6 +39,7 @@ function authenticate(username, password) {
                 city: user.city,
                 lat: user.lat,
                 lng: user.lng,
+                phone: user.phone,
                  isAdvisor : false,
                 token: jwt.sign({ sub: user._id }, config.secret)
             });
@@ -151,7 +152,8 @@ function modifyUser(req) {
              email : req.body.email,
              city: req.body.city,
              lat: req.body.lat,
-             lng: req.body.lng
+             lng: req.body.lng,
+              phone: req.body.phone,
          }
      }
      db.users.update(query,updateObj,function(err,user) {
