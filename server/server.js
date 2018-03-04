@@ -22,7 +22,7 @@ app.use(expressJwt({
         }
         return null;
     }
-}).unless({ path: ['/users/authenticate', '/users/register','/advisors/register','/advisors/get/fin' , '/upload'] }));
+}).unless({ path: ['/users/authenticate', '/users/register','/advisors/register',/\/advisors\/get/i  , '/upload',/\/advisors\/current/i ] }));
 
 // routes
 app.use('/users', require('./controllers/users.controller'));
