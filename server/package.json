@@ -20,7 +20,10 @@
         "nodemailer": "^4.4.2",
         "q": "^1.4.1",
         "request": "^2.58.0",
-        "rootpath": "^0.1.2"
+        "rootpath": "^0.1.2",
+        "mongoose": "^4.9.2",
+        "socket.io-client": "^1.7.3",
+        "socketio": "^1.0.0"
     },
     "license": "MIT"
 }

@@ -22,7 +22,7 @@ app.use(expressJwt({
         }
         return null;
     }
-}).unless({ path: ['/users/authenticate', '/users/register','/advisors/register',/\/advisors\/get/i  , '/upload',/\/advisors\/current/i ] }));
+}).unless({ path: ['/users/authenticate', '/users/register','/advisors/register' ,/\/chat/i ,/\/socket.io/i, /\/advisors\/get/i  , '/upload',/\/advisors\/current/i ] }));
 
 // routes
 app.use('/users', require('./controllers/users.controller'));
@@ -32,7 +32,7 @@ app.use('/ask', require('./controllers/query.controller'));
 app.use('/upload', require('./controllers/file-upload.controller'));
 app.use('/comment', require('./controllers/comment.controller'));
 app.use('/fav', require('./controllers/fav.controller'));
-
+app.use('/chat', require('./controllers/chat'));
 
 // start server
 var port = process.env.NODE_ENV === 'production' ? 80 : 4000;
