@@ -39,3 +39,16 @@ var port = process.env.NODE_ENV === 'production' ? 80 : 4000;
 var server = app.listen(port, function () {
     console.log('Server listening on port ' + port);
 });
+var io = require('socket.io')(server);
+// socket io
+io.on('connection', function (socket) {
+    console.log('User connected');
+    socket.on('disconnect', function() {
+      console.log('User disconnected');
+    });
+    socket.on('save-message', function (data) {
+      console.log(data);
+      io.emit('new-message', { message: data });
+    });
+  });
+  
