@@ -40,25 +40,9 @@ var server = app.listen(port, function () {
     console.log('Server listening on port ' + port);
 });
 var io = require('socket.io')(server);
-// socket io
-// io.on('connection', function (socket) {
-//     console.log('User connected');
-//     socket.on('disconnect', function() {
-//       console.log('User disconnected');
-//     });
-//     socket.on('save-message', function (data) {
-//       console.log(data);
-//       io.emit('new-message', { message: data });
-//     });
-//   });
 var usersCollection = [];
+var allConnectedUsers = [];
 
-// Express routes
-// app.set("view engine", "vash");
-
-// app.get("*",function(req, res){
-//   res.render("index");
-// });
 
 app.post("/listFriends", function (req, res) {
     var clonedArray = usersCollection.slice();
@@ -80,11 +64,23 @@ io.on('connection', function (socket) {
         // Same contract as ng-chat.User
         username = userInfo.username;
         var index = usersCollection.findIndex(x => {
-            return x.username == username;
+            return x.displayName == username;
         });
         if (index != -1) {
             return;
         }
+         var index = allConnectedUsers.findIndex(x => {
+            return x.displayName == username;
+        });
+        if (index != -1) {
+            return;
+        }
+        allConnectedUsers.push({
+                id: socket.id, // Assigning the socket ID as the user ID in this example
+                displayName: username,
+                status: 0, // ng-chat UserStatus.Online,
+                avatar: null
+            });
         if (userInfo.isExpert) {
             usersCollection.push({
                 id: socket.id, // Assigning the socket ID as the user ID in this example
@@ -108,7 +104,8 @@ io.on('connection', function (socket) {
 
             var i = usersCollection.findIndex(x => x.id == socket.id);
             usersCollection.splice(i, 1);
-
+             var i2 = allConnectedUsers.findIndex(x => x.id == socket.id);
+            allConnectedUsers.splice(i2, 1);
             socket.broadcast.emit("friendsListChanged", usersCollection);
         });
     });
@@ -118,7 +115,7 @@ io.on('connection', function (socket) {
         console.log(message);
 
         io.to(message.toId).emit("messageReceived", {
-            user: usersCollection.find(x => x.id == message.fromId),
+            user: allConnectedUsers.find(x => x.id == message.fromId),
             message: message
         });
 
