@@ -50,7 +50,7 @@ app.post("/listFriends", function (req, res) {
     // Getting the userId from the request body as this is just a demo 
     // Ideally in a production application you would change this to a session value or something else
     var i = usersCollection.findIndex(x => x.id == req.body.userId);
-
+    if(i != -1 )
     clonedArray.splice(i, 1);
 
     res.json(clonedArray);
@@ -67,12 +67,14 @@ io.on('connection', function (socket) {
             return x.displayName == username;
         });
         if (index != -1) {
+            socket.emit("generatedUserId", socket.id);
             return;
         }
          var index = allConnectedUsers.findIndex(x => {
             return x.displayName == username;
         });
         if (index != -1) {
+            socket.emit("generatedUserId", socket.id);
             return;
         }
         allConnectedUsers.push({
@@ -85,6 +87,7 @@ io.on('connection', function (socket) {
             usersCollection.push({
                 id: socket.id, // Assigning the socket ID as the user ID in this example
                 displayName: username,
+                cat : userInfo.expertCat,
                 status: 0, // ng-chat UserStatus.Online,
                 avatar: null
             });
@@ -99,16 +102,10 @@ io.on('connection', function (socket) {
         socket.emit("generatedUserId", socket.id);
 
         // On disconnect remove this socket client from the users collection
-        socket.on('disconnect', function () {
-            console.log('User disconnected!');
-
-            var i = usersCollection.findIndex(x => x.id == socket.id);
-            usersCollection.splice(i, 1);
-             var i2 = allConnectedUsers.findIndex(x => x.id == socket.id);
-            allConnectedUsers.splice(i2, 1);
-            socket.broadcast.emit("friendsListChanged", usersCollection);
-        });
+        
+        
     });
+   
 
     socket.on("sendMessage", function (message) {
         console.log("Message received:");
