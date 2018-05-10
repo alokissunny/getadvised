@@ -52,6 +52,12 @@ app.post("/listFriends", function (req, res) {
     var i = usersCollection.findIndex(x => x.id == req.body.userId);
     if(i != -1 )
     clonedArray.splice(i, 1);
+   clonedArray = clonedArray.filter(item => {
+        if(item.cat === req.body.catFilter)
+        return true;
+        else return false;
+
+    })
 
     res.json(clonedArray);
 });
