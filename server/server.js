@@ -49,15 +49,10 @@ app.post("/listFriends", function (req, res) {
 
     // Getting the userId from the request body as this is just a demo 
     // Ideally in a production application you would change this to a session value or something else
-    var i = usersCollection.findIndex(x => x.id == req.body.userId);
+    var i = usersCollection.findIndex(x => x.displayName == req.body.username);
     if(i != -1 )
     clonedArray.splice(i, 1);
-   clonedArray = clonedArray.filter(item => {
-        if(item.cat === req.body.catFilter)
-        return true;
-        else return false;
-
-    })
+   clonedArray = clonedArray.filter(item => item.cat == req.body.catFilter)
 
     res.json(clonedArray);
 });
