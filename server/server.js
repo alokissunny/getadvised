@@ -103,7 +103,14 @@ io.on('connection', function (socket) {
         socket.emit("generatedUserId", socket.id);
 
         // On disconnect remove this socket client from the users collection
-        
+        socket.on('disconnect', function() {
+      console.log('User disconnected!');
+
+      var i = usersCollection.findIndex(x => x.id == socket.id);
+    //   usersCollection.splice(i, 1);
+
+    //   socket.broadcast.emit("friendsListChanged", usersCollection);
+   });
         
     });
    
