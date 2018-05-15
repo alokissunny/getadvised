@@ -106,14 +106,13 @@ io.on('connection', function (socket) {
         socket.on('disconnect', function() {
       console.log('User disconnected!');
 
-      var i = usersCollection.findIndex(x => x.id == socket.id);
-    //   usersCollection.splice(i, 1);
-
-    //   socket.broadcast.emit("friendsListChanged", usersCollection);
+      var index1 = usersCollection.findIndex(x => x.id == socket.id);
+      usersCollection.splice(index1, 1);
+      var index2 = allConnectedUsers.findIndex(x => x.id == socket.id);
+      allConnectedUsers.splice(index2, 1);
+      socket.broadcast.emit("friendsListChanged", usersCollection);
    });
-        
     });
-   
 
     socket.on("sendMessage", function (message) {
         console.log("Message received:");
